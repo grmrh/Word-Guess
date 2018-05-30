@@ -3,17 +3,20 @@ function Letter(c) {
   this.guessed = false;
 }
 
-Letter.prototype.gotItRight = function(){
+/**
+ * update a character status of this object which is a playingWord
+ */
+Letter.prototype.gotSingleRight = function(){
   return this.guessed ? this.single : '_';
 }
 
+/**
+ * update a character status of this object, which is a baseWord 
+ * @param {*} c - guessed character
+ */
 Letter.prototype.checkSingle = function(c) {
+  // one can add verificaiton for this is not baseWordInstance if need, but omitted here.
   this.guessed = c.toLowerCase() === this.single.toLowerCase() ? true : false;
 }
-
-var l = new Letter('k');
-console.log(l.single, l.guessed);
-console.log(l.checkSingle('K'), l.guessed);
-console.log(l.gotItRight());
 
 module.exports = Letter;

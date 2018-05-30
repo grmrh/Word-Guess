@@ -1,22 +1,34 @@
 var Letter = require('./letter');
 
 var Word = function(aWord) {
-  this.word = aWord && Array.from(aWord).map( c => new Letter(c)) || null;
+  this.Letters = (aWord && Array.from(aWord).map( c => new Letter(c))) || null;
+  this.numGuessedRight = this.Letters.forEach(w => w.guessed == true ? this.numGuessedRight++ : this.numGuessedRight);
 }
 
+/**
+ * display the word in progress in console
+ * @param {*} letters : array of Letter instance
+ */
 Word.prototype.wordString = function() {
-  return this.word.map(c => c.gotItRight()).join(' ');
+  return this.Letters.map(c => c.gotSingleRight()).join(' ');
 }
 
-Word.prototype.wordGuess = function(c) {
-  this.word.forEach(x => x.checkSingle(c));
-}
+/**
+ * udpate each matched letter status in the playingWord
+ * @param {*} c 
+ */
+Word.prototype.setMatched = function(c, baseWord) {
 
-var w = new Word('gRaCe');
-console.log(w.word);
-console.log(w.wordGuess('a'), w.word);
-console.log(w.wordString());
-console.log(w.wordGuess('r'), w.word);
-console.log(w.wordString());
+  baseWord.forEach(w => w.checkSingle(c));
+  var matched = false;
+  for (var index in baseWord) { 
+    if(baseWord[index].guessed) {
+      this.Letters[index].single = c ;
+      this.Letters[index].guessed = true;
+      matched = true;
+    }   
+  }
+  return matched;
+}
 
 module.exports = Word;
